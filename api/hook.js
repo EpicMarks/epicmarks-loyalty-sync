@@ -94,7 +94,8 @@ async function hsSearchContactIdsByEmail(email) {
     body: JSON.stringify({
       filterGroups: [{ filters: [{ propertyName: "email", operator: "EQ", value: email }] }],
       properties: ["email", "createdate"],
-      sorts: [{ propertyName: "createdate", direction: "DESC" }],
+      // HubSpot requires ASCENDING / DESCENDING
+      sorts: [{ propertyName: "createdate", direction: "DESCENDING" }],
       limit: 10,
     }),
   });
@@ -102,6 +103,7 @@ async function hsSearchContactIdsByEmail(email) {
   const j = await r.json();
   return (j?.results || []).map(x => x.id);
 }
+
 
 async function hsCreateContact(email) {
   const r = await fetch("https://api.hubapi.com/crm/v3/objects/contacts", {
